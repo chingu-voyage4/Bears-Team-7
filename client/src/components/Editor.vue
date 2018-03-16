@@ -1,5 +1,5 @@
 <template>
-  <div class="editor" v-on:keyup="handleKeyboardPress" tabindex="0">
+  <div class="editor" @keydown.prevent="handleKeyboardPress" tabindex="0" data-test="editor">
     {{ documentData }}
   </div>
 </template>
