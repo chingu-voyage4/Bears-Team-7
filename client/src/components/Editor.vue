@@ -12,18 +12,28 @@ const getKeyValueToRender = (keyCode, keyValue) => {
   }
   return keyValue;
 };
+
 export default {
   name: 'Editor',
   data: () => ({
-    documentData: '',
+    documentData: ''
   }),
   // define methods under the `methods` object
   methods: {
     handleKeyboardPress(event) {
-      this.documentData =
-        this.documentData + getKeyValueToRender(event.keyCode, event.key);
-    },
-  },
+      // handle key actions
+      // backspace
+      if (event.keyCode === 8) {
+        this.documentData = this.documentData.slice(0, -1);
+      }
+
+      // handle key input
+      else {
+        this.documentData =
+          this.documentData + getKeyValueToRender(event.keyCode, event.key);
+      }
+    }
+  }
 };
 </script>
 
