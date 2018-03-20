@@ -5,18 +5,18 @@
   "author": "buoyantair <buoyantair@gmail.com>",
   "private": true,
   "scripts": {
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && yarn unit",
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
-    "start": "npm run dev",
+    "start": "yarn dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
-    "test": "npm run unit && npm run e2e",
+    "test": "yarn unit && yarn e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js"
   },
   "lint-staged": {
-    "*.js": "eslint --fix",
-    "*.vue": "eslint --fix"
+    "*.js": ["eslint --fix", "git add"],
+    "*.vue": ["eslint --fix", "git add"]
   },
   "dependencies": {
     "vue": "^2.5.2",
