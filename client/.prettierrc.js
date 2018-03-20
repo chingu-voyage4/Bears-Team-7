@@ -1,9 +1,16 @@
 // .prettierrc.js
 
 module.exports = {
-  printWidth: 80,
-  parser: 'flow',
-  singleQuote: true,
-  trailingComma: 'all',
-  arrowParens: 'always',
+  overrides: [
+    {
+      files: "*.js",
+      options: {
+        printWidth: 80,
+        parser: "flow",
+        singleQuote: true,
+        trailingComma: "all",
+        arrowParens: "always"
+      }
+    }
+  ]
 };
