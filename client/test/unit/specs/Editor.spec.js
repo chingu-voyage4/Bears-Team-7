@@ -45,6 +45,10 @@ describe('Editor.vue', () => {
     backspace: {
       keyCode: 8,
     },
+    tab: {
+      keyCode: 9,
+      key: 'tab',
+    },
   };
 
   test('Adds the "a" character to the editor when it is pressed', () => {
@@ -93,6 +97,21 @@ describe('Editor.vue', () => {
     wrapper.trigger('keydown.enter');
     wrapper.trigger('keydown', keyCodes.backspace);
     expect(wrapper.find('div[data-test="editor"]').text()).toBe('abc');
+  });
+
+  test('The tab key indents with 2 spaces', () => {
+    const wrapper = mount(Component);
+    wrapper.trigger('keydown', keyCodes.a);
+    wrapper.trigger('keydown', keyCodes.b);
+    wrapper.trigger('keydown', keyCodes.c);
+    wrapper.trigger('keydown.enter');
+    wrapper.trigger('keydown', keyCodes.tab);
+    wrapper.trigger('keydown', keyCodes[1]);
+    wrapper.trigger('keydown', keyCodes[2]);
+    wrapper.trigger('keydown', keyCodes[3]);
+    expect(wrapper.find('div[data-test="editor"]').text()).toBe(
+      'abc\n\xa0\xa0123',
+    );
   });
 });
 
