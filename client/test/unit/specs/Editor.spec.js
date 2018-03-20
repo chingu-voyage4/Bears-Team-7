@@ -20,31 +20,31 @@ describe('Editor.vue', () => {
   const keyCodes = {
     a: {
       keyCode: 65,
-      key: 'a'
+      key: 'a',
     },
     b: {
       keyCode: 66,
-      key: 'b'
+      key: 'b',
     },
     c: {
       keyCode: 67,
-      key: 'c'
+      key: 'c',
     },
     1: {
       keyCode: 49,
-      key: '1'
+      key: '1',
     },
     2: {
       keyCode: 50,
-      key: '2'
+      key: '2',
     },
     3: {
       keyCode: 51,
-      key: '3'
+      key: '3',
     },
     backspace: {
-      keyCode: 8
-    }
+      keyCode: 8,
+    },
   };
 
   test('Adds the "a" character to the editor when it is pressed', () => {
