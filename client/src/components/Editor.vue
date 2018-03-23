@@ -6,11 +6,16 @@
 
 <script>
 const getKeyValueToRender = (keyCode, keyValue) => {
-  // Enter
-  if (keyCode === 13) {
-    return '\n';
+  switch (keyCode) {
+    // Enter
+    case 13:
+      return '\n';
+    // Tab
+    case 9:
+      return '\xa0\xa0';
+    default:
+      return keyValue;
   }
-  return keyValue;
 };
 
 export default {
