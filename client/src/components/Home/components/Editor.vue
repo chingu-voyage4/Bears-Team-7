@@ -47,12 +47,17 @@ h2 {
   font-weight: normal;
 }
 .editor {
-  background-color: burlywood;
-  width: 500px;
-  height: 500px;
+  background-color: #1e2127;
+  color: #9ba1a2;
+  width: 100%;
+  height: 100%;
   white-space: pre;
+  font-size: 16px;
+  text-align: left;
+  padding-left: 60px;
+  overflow: scroll;
 }
 .editor:focus {
-  border: 1 solid black;
+  outline: 0;
 }
 </style>
