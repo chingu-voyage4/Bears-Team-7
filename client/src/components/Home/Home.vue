@@ -1,17 +1,19 @@
 <template>
   <div class="main">
+    <sidebar />
     <editor />
   </div>
 </template>
 
 <script>
 import Editor from './components/Editor';
-// import Sidebar from './components/Sidebar';
+import Sidebar from './components/Sidebar';
 
 export default {
   name: 'Home',
   components: {
     editor: Editor,
+    sidebar: Sidebar,
   },
 };
 </script>
