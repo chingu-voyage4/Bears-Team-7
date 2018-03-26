@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import Component from '@/components/Editor';
+import Component from '@/components/Home/components/Editor';
 
 describe('Editor.vue', () => {
   test('is a Vue instance', () => {
