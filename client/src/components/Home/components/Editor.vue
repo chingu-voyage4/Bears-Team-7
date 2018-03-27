@@ -21,16 +21,24 @@ const getKeyValueToRender = (keyCode, keyValue) => {
   }
 };
 
+const getDefaultValue = () => {
+  if (window && window.localStorage) {
+    return window.localStorage.getItem('documentData') || '';
+  }
+  return '';
+};
+
+const setValueToStorage = (value) => {
+  if (window && window.localStorage) {
+    window.localStorage.setItem('documentData', value);
+  }
+};
+
 export default {
   name: 'Editor',
   data: () => ({
-    documentData: '',
+    documentData: getDefaultValue(),
   }),
-  mounted() {
-    if (localStorage && localStorage.documentData) {
-      this.documentData = localStorage.documentData;
-    }
-  },
   // define methods under the `methods` object
   methods: {
     handleKeyboardPress(event) {
@@ -43,7 +51,7 @@ export default {
         this.documentData =
           this.documentData + getKeyValueToRender(event.keyCode, event.key);
       }
-      localStorage.setItem('documentData', this.documentData);
+      setValueToStorage(this.documentData);
     },
   },
 };
