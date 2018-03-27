@@ -11,7 +11,7 @@
       "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "yarn dev",
     "unit": "jest --config test/unit/jest.conf.js",
-    "unit:coverage": "jest --config test/unit/jest.conf.js --coverage",
+    "unit:coverage": "yarn unit --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "yarn unit && yarn e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
