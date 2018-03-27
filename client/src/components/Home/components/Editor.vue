@@ -1,7 +1,10 @@
 <template>
-  <div class="editor" @keydown.prevent="handleKeyboardPress" tabindex="0" data-test="editor">
-    {{ documentData }}
-  </div>
+  <div
+    class="editor"
+    @keydown.prevent="handleKeyboardPress"
+    tabindex="0"
+    data-test="editor"
+  >{{documentData}}</div>
 </template>
 
 <script>
