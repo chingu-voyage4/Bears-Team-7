@@ -58,22 +58,18 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1,
-h2 {
-  font-weight: normal;
-}
+<style lang='scss' scoped>
 .editor {
-  background-color: #1e2127;
-  color: #9ba1a2;
+  background-color: $editor-background;
+  color: $editor-fontColor;
   height: 100%;
   white-space: pre;
   font-size: 16px;
   text-align: left;
   padding-left: 120px;
   overflow: scroll;
-}
-.editor:focus {
-  outline: 0;
+  :focus {
+    outline: 0;
+  }
 }
 </style>
