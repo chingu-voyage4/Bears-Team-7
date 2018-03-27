@@ -26,6 +26,11 @@ export default {
   data: () => ({
     documentData: '',
   }),
+  mounted() {
+    if (localStorage && localStorage.documentData) {
+      this.documentData = localStorage.documentData;
+    }
+  },
   // define methods under the `methods` object
   methods: {
     handleKeyboardPress(event) {
@@ -38,6 +43,7 @@ export default {
         this.documentData =
           this.documentData + getKeyValueToRender(event.keyCode, event.key);
       }
+      localStorage.setItem('documentData', this.documentData);
     },
   },
 };
