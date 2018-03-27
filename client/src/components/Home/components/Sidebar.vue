@@ -2,6 +2,7 @@
   <div class="sidebar">
     <div><i class="fas fa-file" /></div>
     <div><i class="fas fa-search" /></div>
+    <div><i class="fas fa-cog" /></div>
   </div>
 </template>
 
@@ -30,5 +31,10 @@ export default {
 .sidebar div:hover {
   color: #ffffff;
   cursor: pointer;
+}
+.sidebar div .fa-cog {
+  position: absolute;
+  bottom: 30px;
+  left: 17px;
 }
 </style>

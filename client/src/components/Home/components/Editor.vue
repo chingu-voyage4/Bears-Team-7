@@ -49,12 +49,11 @@ h2 {
 .editor {
   background-color: #1e2127;
   color: #9ba1a2;
-  width: 100%;
   height: 100%;
   white-space: pre;
   font-size: 16px;
   text-align: left;
-  padding-left: 60px;
+  padding-left: 120px;
   overflow: scroll;
 }
 .editor:focus {
