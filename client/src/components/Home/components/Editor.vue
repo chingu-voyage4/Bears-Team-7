@@ -10,7 +10,11 @@
       data-test="editor-row"
       v-for="(row, index) in documentData"
       :class="[`${(currentRowNumber - 1) === index ? 'current' : ''}`]"
-      v-bind:key=index>{{ row }}</div>
+      v-bind:key=index
+    >
+      <div class="row-number" data-test="row-number">{{ index }}</div>
+      <div data-test="row-data">{{ row }}</div>
+    </div>
   </div>
 </template>
 
@@ -67,7 +71,12 @@ export default {
   }
   .row {
     height: 22px;
-    padding-left: 60px;
+    display: flex;
+    .row-number {
+      flex-basis: 60px;
+      text-align: center;
+      color: #484848;
+    }
   }
   .row.current {
     background-color: $editor-currentLineBackground;

@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils';
 import Component from '@/components/Home/components/Editor';
 
+const rowSelector = 'div[data-test="editor"] div[data-test="row-data"]';
+
 afterEach(() => {
   window.localStorage.clear();
 });
@@ -13,12 +15,12 @@ describe('Editor.vue', () => {
 
   test('contains the editor div', () => {
     const wrapper = mount(Component);
-    expect(wrapper.contains('div[data-test="editor"]')).toBe(true);
+    expect(wrapper.contains(rowSelector)).toBe(true);
   });
 
   test('defaults to having no text in the editor', () => {
     const wrapper = mount(Component);
-    expect(wrapper.find('div[data-test="editor"]').text()).toBe('');
+    expect(wrapper.find(rowSelector).text()).toBe('');
   });
 
   const space = '\xa0';
@@ -60,7 +62,7 @@ describe('Editor.vue', () => {
   test('Adds the "a" character to the editor when it is pressed', () => {
     const wrapper = mount(Component);
     wrapper.trigger('keydown', keyCodes.a);
-    expect(wrapper.find('div[data-test="editor"]').text()).toBe('a');
+    expect(wrapper.find(rowSelector).text()).toBe('a');
   });
 
   test('Adds abc123 to the editor', () => {
@@ -71,7 +73,7 @@ describe('Editor.vue', () => {
     wrapper.trigger('keydown', keyCodes[1]);
     wrapper.trigger('keydown', keyCodes[2]);
     wrapper.trigger('keydown', keyCodes[3]);
-    expect(wrapper.find('div[data-test="editor"]').text()).toBe('abc123');
+    expect(wrapper.find(rowSelector).text()).toBe('abc123');
   });
 
   test('The enter key adds a new line to the editor', () => {
@@ -79,7 +81,7 @@ describe('Editor.vue', () => {
     wrapper.trigger('keydown', keyCodes.a);
     wrapper.trigger('keydown.enter');
     wrapper.trigger('keydown', keyCodes[1]);
-    const rows = wrapper.findAll('div[data-test="editor-row"]');
+    const rows = wrapper.findAll(rowSelector);
     expect(rows.at(0).text()).toBe('a');
     expect(rows.at(1).text()).toBe('1');
   });
@@ -90,7 +92,7 @@ describe('Editor.vue', () => {
     wrapper.trigger('keydown', keyCodes.b);
     wrapper.trigger('keydown', keyCodes.c);
     wrapper.trigger('keydown', keyCodes.backspace);
-    expect(wrapper.find('div[data-test="editor"]').text()).toBe('ab');
+    expect(wrapper.find(rowSelector).text()).toBe('ab');
   });
 
   test('The backspace key removes new lines', () => {
@@ -100,7 +102,7 @@ describe('Editor.vue', () => {
     wrapper.trigger('keydown', keyCodes.c);
     wrapper.trigger('keydown.enter');
     wrapper.trigger('keydown', keyCodes.backspace);
-    expect(wrapper.find('div[data-test="editor"]').text()).toBe('abc');
+    expect(wrapper.find(rowSelector).text()).toBe('abc');
   });
 
   test('The tab key gets added to the Vue document object', () => {
@@ -118,7 +120,7 @@ describe('Editor.vue', () => {
     wrapper.trigger('keydown', keyCodes.a);
     wrapper.trigger('keydown', keyCodes.tab);
     wrapper.trigger('keydown', keyCodes.a);
-    expect(wrapper.find('div[data-test="editor"]').text()).toBe(`a${tab}a`);
+    expect(wrapper.find(rowSelector).text()).toBe(`a${tab}a`);
   });
 
   test('Document is saved to localstorage', () => {
@@ -128,6 +130,6 @@ describe('Editor.vue', () => {
     // Mound a second component and check that the default value is the expected
     // value from the previous wrapper
     const secondWrapper = mount(Component);
-    expect(secondWrapper.find('div[data-test="editor"]').text()).toBe('a');
+    expect(secondWrapper.find(rowSelector).text()).toBe('a');
   });
 });
