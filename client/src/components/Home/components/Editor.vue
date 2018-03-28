@@ -4,53 +4,46 @@
     @keydown.prevent="handleKeyboardPress"
     tabindex="0"
     data-test="editor"
-  >{{documentData}}</div>
+  >
+    <div
+      class="row"
+      v-for="(row, index) in documentData"
+      :class="[`${(currentRowNumber - 1) === index ? 'current' : ''}`]"
+      v-bind:key=index>{{ row }}</div>
+  </div>
 </template>
 
 <script>
-const getKeyValueToRender = (keyCode, keyValue) => {
-  switch (keyCode) {
-    // Enter
-    case 13:
-      return '\n';
-    // Tab
-    case 9:
-      return '\xa0\xa0';
-    default:
-      return keyValue;
-  }
-};
-
-const getDefaultValue = () => {
-  if (window && window.localStorage) {
-    return window.localStorage.getItem('documentData') || '';
-  }
-  return '';
-};
-
-const setValueToStorage = (value) => {
-  if (window && window.localStorage) {
-    window.localStorage.setItem('documentData', value);
-  }
-};
+import {
+  getDefaultValue,
+  setRowNumber,
+  setValueToStorage,
+  updateDocumentData,
+} from './utilities';
 
 export default {
   name: 'Editor',
-  data: () => ({
-    documentData: getDefaultValue(),
-  }),
+  data: () => {
+    const documentData = getDefaultValue();
+    return {
+      documentData,
+      currentRowNumber: documentData.length,
+    };
+  },
   // define methods under the `methods` object
   methods: {
     handleKeyboardPress(event) {
-      // handle key actions
-      // backspace
-      if (event.keyCode === 8) {
-        this.documentData = this.documentData.slice(0, -1);
-      } else {
-        // handle key input
-        this.documentData =
-          this.documentData + getKeyValueToRender(event.keyCode, event.key);
-      }
+      // handle key input
+      this.documentData = updateDocumentData(
+        this.documentData,
+        this.currentRowNumber,
+        event,
+      );
+      this.currentRowNumber = setRowNumber(
+        this.documentData[this.currentRowNumber - 1],
+        this.currentRowNumber,
+        event,
+      );
       setValueToStorage(this.documentData);
     },
   },
@@ -66,10 +59,17 @@ export default {
   white-space: pre;
   font-size: 16px;
   text-align: left;
-  padding-left: 120px;
+  padding-left: 60px;
   overflow: scroll;
   :focus {
     outline: 0;
+  }
+  .row {
+    height: 22px;
+    padding-left: 60px;
+  }
+  .row.current {
+    background-color: $editor-currentLineBackground;
   }
 }
 </style>
