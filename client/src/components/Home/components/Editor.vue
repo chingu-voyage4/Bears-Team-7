@@ -1,12 +1,13 @@
 <template>
   <div
     class="editor"
+    data-test="editor"
     @keydown.prevent="handleKeyboardPress"
     tabindex="0"
-    data-test="editor"
   >
     <div
       class="row"
+      data-test="editor-row"
       v-for="(row, index) in documentData"
       :class="[`${(currentRowNumber - 1) === index ? 'current' : ''}`]"
       v-bind:key=index>{{ row }}</div>

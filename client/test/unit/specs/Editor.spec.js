@@ -77,13 +77,11 @@ describe('Editor.vue', () => {
   test('The enter key adds a new line to the editor', () => {
     const wrapper = mount(Component);
     wrapper.trigger('keydown', keyCodes.a);
-    wrapper.trigger('keydown', keyCodes.b);
-    wrapper.trigger('keydown', keyCodes.c);
     wrapper.trigger('keydown.enter');
     wrapper.trigger('keydown', keyCodes[1]);
-    wrapper.trigger('keydown', keyCodes[2]);
-    wrapper.trigger('keydown', keyCodes[3]);
-    expect(wrapper.find('div[data-test="editor"]').text()).toBe('abc\n123');
+    const rows = wrapper.findAll('div[data-test="editor-row"]');
+    expect(rows.at(0).text()).toBe('a');
+    expect(rows.at(1).text()).toBe('1');
   });
 
   test('The backspace key removes a character', () => {
@@ -108,7 +106,7 @@ describe('Editor.vue', () => {
   test('The tab key gets added to the Vue document object', () => {
     const wrapper = mount(Component);
     wrapper.trigger('keydown', keyCodes.tab);
-    expect(wrapper.vm.documentData).toBe(tab);
+    expect(wrapper.vm.documentData).toEqual([tab]);
   });
 
   test('The tab key gets added to the document', () => {

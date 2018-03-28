@@ -51,10 +51,12 @@ export const setRowNumber = (rowValue, currentRowNumber, { keyCode }) => {
 
 export const getDefaultValue = () => {
   const defaultValue = [''];
-  if (window && window.localStorage) {
-    return (
-      JSON.parse(window.localStorage.getItem('documentData')) || defaultValue
-    );
+  if (
+    window &&
+    window.localStorage &&
+    window.localStorage.getItem('documentData')
+  ) {
+    return JSON.parse(window.localStorage.getItem('documentData'));
   }
   return defaultValue;
 };
