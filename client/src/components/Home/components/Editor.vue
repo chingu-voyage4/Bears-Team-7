@@ -22,19 +22,36 @@ export default {
   name: 'Editor',
   data: () => ({
     documentData: '',
+    cursor: {
+      // use a Selection object
+    },
   }),
   // define methods under the `methods` object
   methods: {
     handleKeyboardPress(event) {
       // handle key actions
-      // backspace
-      if (event.keyCode === 8) {
-        this.documentData = this.documentData.slice(0, -1);
-      } else {
-        // handle key input
-        this.documentData =
-          this.documentData + getKeyValueToRender(event.keyCode, event.key);
-      }
+      switch (event.keyCode) {
+        // Backspace
+        case 8:
+          this.documentData = this.documentData.slice(0, -1);
+          break;
+        // Left
+        case 37:
+          break;
+        // Up
+        case 38:
+          break;
+        // Right
+        case 39:
+          break;
+        // Down
+        case 40:
+          break;
+        // Text input
+        default: 
+          this.documentData =
+              this.documentData + getKeyValueToRender(event.keyCode, event.key);
+      
     },
   },
 };
