@@ -13,28 +13,28 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.sidebar {
+<style lang='scss' scoped>
+div.sidebar {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   width: 60px;
-  background-color: #272727;
-}
-.sidebar div {
-  color: #878787;
-  font-size: 2rem;
-  text-align: center;
-  padding: 20px 0px 20px 4px;
-}
-.sidebar div:hover {
-  color: #ffffff;
-  cursor: pointer;
-}
-.sidebar div .fa-cog {
-  position: absolute;
-  bottom: 30px;
-  left: 17px;
+  background-color: $sidebar-background;
+  div {
+    color: $sidebar-icon;
+    font-size: 2rem;
+    text-align: center;
+    padding: 20px 0px 20px 4px;
+    :hover {
+      color: $sidebar-iconActive;
+      cursor: pointer;
+    }
+    .fa-cog {
+      position: absolute;
+      bottom: 30px;
+      left: 17px;
+    }
+  }
 }
 </style>
