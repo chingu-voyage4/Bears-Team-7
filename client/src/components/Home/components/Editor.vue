@@ -1,7 +1,10 @@
 <template>
-  <div class="editor" @keydown.prevent="handleKeyboardPress" tabindex="0" data-test="editor">
-    {{ documentData }}
-  </div>
+  <div
+    class="editor"
+    @keydown.prevent="handleKeyboardPress"
+    tabindex="0"
+    data-test="editor"
+  >{{documentData}}</div>
 </template>
 
 <script>
@@ -18,10 +21,23 @@ const getKeyValueToRender = (keyCode, keyValue) => {
   }
 };
 
+const getDefaultValue = () => {
+  if (window && window.localStorage) {
+    return window.localStorage.getItem('documentData') || '';
+  }
+  return '';
+};
+
+const setValueToStorage = (value) => {
+  if (window && window.localStorage) {
+    window.localStorage.setItem('documentData', value);
+  }
+};
+
 export default {
   name: 'Editor',
   data: () => ({
-    documentData: '',
+    documentData: getDefaultValue(),
   }),
   // define methods under the `methods` object
   methods: {
@@ -35,6 +51,7 @@ export default {
         this.documentData =
           this.documentData + getKeyValueToRender(event.keyCode, event.key);
       }
+      setValueToStorage(this.documentData);
     },
   },
 };

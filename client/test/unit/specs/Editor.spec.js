@@ -1,6 +1,10 @@
 import { mount } from '@vue/test-utils';
 import Component from '@/components/Home/components/Editor';
 
+afterEach(() => {
+  window.localStorage.clear();
+});
+
 describe('Editor.vue', () => {
   test('is a Vue instance', () => {
     const wrapper = mount(Component);
@@ -109,15 +113,23 @@ describe('Editor.vue', () => {
 
   test('The tab key gets added to the document', () => {
     /*
-      Note that .text() trims the resulting string as seen here: https://github.com/vuejs/vue-test-utils/issues/152
-      Therefore we have wrapped the tab in two characters
-    */
+        Note that .text() trims the resulting string as seen here: https://github.com/vuejs/vue-test-utils/issues/152
+        Therefore we have wrapped the tab in two characters
+      */
     const wrapper = mount(Component);
     wrapper.trigger('keydown', keyCodes.a);
     wrapper.trigger('keydown', keyCodes.tab);
     wrapper.trigger('keydown', keyCodes.a);
     expect(wrapper.find('div[data-test="editor"]').text()).toBe(`a${tab}a`);
   });
-});
 
-// vm.$el.querySelector('div[data-test="editor"]').textContent,
+  test('Document is saved to localstorage', () => {
+    const wrapper = mount(Component);
+    wrapper.trigger('keydown', keyCodes.a);
+
+    // Mound a second component and check that the default value is the expected
+    // value from the previous wrapper
+    const secondWrapper = mount(Component);
+    expect(secondWrapper.find('div[data-test="editor"]').text()).toBe('a');
+  });
+});
