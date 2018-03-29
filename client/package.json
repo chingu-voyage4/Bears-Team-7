@@ -7,10 +7,11 @@
   "scripts": {
     "precommit": "lint-staged",
     "prepush": "yarn unit",
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev":
+      "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "yarn dev",
     "unit": "jest --config test/unit/jest.conf.js",
-    "unit:watch": "jest --config test/unit/jest.conf.js --watch",
+    "unit:watch": "yarn unit --watch",
     "unit:coverage": "yarn unit --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "yarn unit && yarn e2e",
@@ -18,14 +19,8 @@
     "build": "node build/build.js"
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.vue": [
-      "eslint --fix",
-      "git add"
-    ]
+    "*.js": ["eslint --fix", "git add"],
+    "*.vue": ["eslint --fix", "git add"]
   },
   "dependencies": {
     "surge": "0.20.1",
@@ -100,9 +95,5 @@
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }
