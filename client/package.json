@@ -7,8 +7,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "prepush": "yarn unit",
-    "dev":
-      "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "yarn dev",
     "unit": "jest --config test/unit/jest.conf.js",
     "unit:watch": "yarn unit --watch",
@@ -19,11 +18,16 @@
     "build": "node build/build.js"
   },
   "lint-staged": {
-    "*.js": ["eslint --fix", "git add"],
-    "*.vue": ["eslint --fix", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.vue": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
-    "surge": "0.20.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
@@ -80,6 +84,7 @@
     "selenium-server": "^3.0.1",
     "semver": "^5.3.0",
     "shelljs": "^0.7.6",
+    "surge": "0.20.1",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue-jest": "^1.0.2",
@@ -95,5 +100,9 @@
     "node": ">= 6.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }
