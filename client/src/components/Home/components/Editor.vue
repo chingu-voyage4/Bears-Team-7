@@ -2,14 +2,15 @@
   <div
     class="editor"
     data-test="editor"
-    @keydown.prevent="handleKeyboardPress"
+    @keydown="handleKeyboardPress"
+    @keyup="handleKeyboardPress"
     tabindex="0"
   >
     <div
       class="row"
       data-test="editor-row"
       v-for="(row, index) in documentData"
-      :class="[`${(currentRowNumber - 1) === index ? 'current' : ''}`]"
+      :class="[`${(documentData.length - 1) === index ? 'current' : ''}`]"
       v-bind:key=index
     >
       <div class="row-number" data-test="row-number">{{ index }}</div>
@@ -21,10 +22,40 @@
 <script>
 import {
   getDefaultValue,
-  setRowNumber,
+  listOfSpecialKeys,
   setValueToStorage,
   updateDocumentData,
 } from './utilities';
+
+const KEY_DOWN_EVENT = 'keydown';
+const KEY_UP_EVENT = 'keyup';
+
+const keysPressed = (() => {
+  let currentShortcutKeysPressed = [];
+  const addEventToRegister = ({ keyCode, type }) => {
+    const hasProperty = Object.prototype.hasOwnProperty.call(
+      listOfSpecialKeys,
+      keyCode,
+    );
+    if (hasProperty) {
+      if (type === KEY_DOWN_EVENT) {
+        currentShortcutKeysPressed = [...currentShortcutKeysPressed, keyCode];
+      } else {
+        currentShortcutKeysPressed = currentShortcutKeysPressed.filter(
+          (item) => item === keyCode,
+        );
+      }
+    }
+  };
+  const shortcutKeyIsBeingPressed = () => currentShortcutKeysPressed.length > 0;
+  const isShift = ({ keyCode }) => keyCode === 16;
+  return {
+    addEventToRegister,
+    currentShortcutKeysPressed,
+    isShift,
+    shortcutKeyIsBeingPressed,
+  };
+})();
 
 export default {
   name: 'Editor',
@@ -32,23 +63,23 @@ export default {
     const documentData = getDefaultValue();
     return {
       documentData,
-      currentRowNumber: documentData.length,
     };
   },
   // define methods under the `methods` object
   methods: {
     handleKeyboardPress(event) {
       // handle key input
-      this.documentData = updateDocumentData(
-        this.documentData,
-        this.currentRowNumber,
-        event,
-      );
-      this.currentRowNumber = setRowNumber(
-        this.documentData[this.currentRowNumber - 1],
-        this.currentRowNumber,
-        event,
-      );
+      keysPressed.addEventToRegister(event);
+      if (
+        event.type === KEY_UP_EVENT ||
+        keysPressed.shortcutKeyIsBeingPressed()
+      ) {
+        return;
+      }
+      if (event.type === KEY_DOWN_EVENT && keysPressed.isShift(event)) {
+        return;
+      }
+      this.documentData = updateDocumentData(this.documentData, event);
       setValueToStorage(this.documentData);
     },
   },
