@@ -21,6 +21,19 @@ const getKeyValueToRender = (keyCode, keyValue) => {
   }
 };
 
+const getDefaultValue = () => {
+  if (window && window.localStorage) {
+    return window.localStorage.getItem('documentData') || '';
+  }
+  return '';
+};
+
+const setValueToStorage = (value) => {
+  if (window && window.localStorage) {
+    window.localStorage.setItem('documentData', value);
+  }
+};
+
 export default {
   name: 'Editor',
   data: () => ({
@@ -79,20 +92,17 @@ export default {
       if (document.activeElement === document.getElementById('editor')) {
         this.caret.offset = sel.anchorOffset;
       }
+      setValueToStorage(this.documentData);
     },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h1,
-h2 {
-  font-weight: normal;
-}
+<style lang='scss' scoped>
 .editor {
-  background-color: #1e2127;
-  color: #9ba1a2;
+  background-color: $editor-background;
+  color: $editor-fontColor;
   height: 100%;
   white-space: pre;
   font-size: 16px;
@@ -100,8 +110,8 @@ h2 {
   padding-top: 15px;
   padding-left: 120px;
   overflow: scroll;
-}
-.editor:focus {
-  outline: 0;
+  :focus {
+    outline: 0;
+  }
 }
 </style>
