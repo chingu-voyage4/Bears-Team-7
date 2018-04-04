@@ -1,6 +1,19 @@
-export const updateDocumentData = (document, { keyCode, key }) => {
+const addValueAtIndex = (rowText, value, index) => {
+  const val = rowText.slice(0, index) + value + rowText.slice(index);
+  return val;
+};
+
+const removeValueAtIndex = (rowText, index) => {
+  const val = rowText.slice(0, Math.max(0, index - 1)) + rowText.slice(index);
+  return val;
+};
+
+export const updateDocumentData = (
+  document,
+  { offset, rowIndex },
+  { keyCode, key },
+) => {
   const newDocument = [...document];
-  const currentRowIndex = document.length - 1;
   switch (keyCode) {
     // Enter
     case 13:
@@ -13,21 +26,58 @@ export const updateDocumentData = (document, { keyCode, key }) => {
         // i.e. the document is empty. Don't remove anything else
         return newDocument;
       }
-      if (newDocument[currentRowIndex] === '') {
+      if (newDocument[rowIndex] === '') {
         // If we are at the start of a new line, remove the line
-        newDocument.splice(currentRowIndex, 1);
+        newDocument.splice(rowIndex, 1);
         return newDocument;
       }
       // Otherwise remove the next character on the line
-      newDocument[currentRowIndex] = newDocument[currentRowIndex].slice(0, -1);
+      newDocument[rowIndex] = removeValueAtIndex(newDocument[rowIndex], offset);
       return newDocument;
     // Tab
     case 9:
-      newDocument[currentRowIndex] += '\xa0\xa0';
+      newDocument[rowIndex] = addValueAtIndex(
+        newDocument[rowIndex],
+        '\xa0\xa0',
+        offset,
+      );
       return newDocument;
     default:
-      newDocument[currentRowIndex] += key;
+      newDocument[rowIndex] = addValueAtIndex(
+        newDocument[rowIndex],
+        key,
+        offset,
+      );
       return newDocument;
+  }
+};
+
+export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
+  switch (keyCode) {
+    // Enter
+    case 13:
+      return { offset: 0, rowIndex: rowIndex + 1 };
+    // backspace
+    case 8:
+      if (offset === 0 && rowIndex === 0) {
+        // If we are at the very start of the document
+        // i.e. the document is empty. Don't remove anything else
+        return { offset: 0, rowIndex: 0 };
+      }
+      if (document[rowIndex] === '') {
+        // If we are at the start of a new line, remove the line
+        return {
+          offset: document[rowIndex - 1].length,
+          rowIndex: rowIndex - 1,
+        };
+      }
+      // move caret to the index before the deleted character
+      return { offset: Math.max(0, offset - 1), rowIndex };
+    // Tab
+    case 9:
+      return { offset, rowIndex };
+    default:
+      return { offset: offset + 1, rowIndex };
   }
 };
 
@@ -53,6 +103,7 @@ export const listOfSpecialKeys = {
   91: 'command',
   18: 'option',
   17: 'control',
+  16: 'shift',
   27: 'escape',
   112: 'f1',
   113: 'f2',
