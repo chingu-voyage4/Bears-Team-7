@@ -1,5 +1,5 @@
 const addValueAtIndex = (rowText, value, index) => {
-  const val = rowText.slice(0, index) + value + rowText.slice(index);
+  const val = `${rowText.slice(0, index)}${value}${rowText.slice(index)}`;
   return val;
 };
 
@@ -75,7 +75,7 @@ export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
       return { offset: Math.max(0, offset - 1), rowIndex };
     // Tab
     case 9:
-      return { offset, rowIndex };
+      return { offset: offset + 2, rowIndex };
     default:
       return { offset: offset + 1, rowIndex };
   }
