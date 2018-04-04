@@ -12,7 +12,7 @@
       :class="[`${(documentData.length - 1) === index ? 'current' : ''}`]"
       v-bind:key=index
     >
-      <div class="row-number" data-test="row-number">{{ index }}</div>
+      <div class="row-number" data-test="row-number">{{ index + 1 }}</div>
       <div data-test="row-data" @click="handleClick($event, index)">{{ row }}</div>
     </div>
   </div>
