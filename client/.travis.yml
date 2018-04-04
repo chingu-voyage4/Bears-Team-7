@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "node"
+cache:
+  directories:
+    - node_modules
+install:
+  - yarn
+before_script:
+  - export CI=false
+script:
+  - yarn build
+deploy:
+  skip_cleanup: true
+  provider: surge
+  project: ./dist/
+  domain: https://vscode-clone.surge.sh

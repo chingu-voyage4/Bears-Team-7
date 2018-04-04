@@ -1,98 +1,64 @@
 <template>
-<div id="editor"
-     class="editor"
-     @keydown.prevent="handleKeyDown"
-     @mouseup="handleMouseUp"
-     tabindex="0"
-     data-test="editor">{{documentData}}</div>
+  <div
+    class="editor"
+    data-test="editor"
+    @keydown="handleKeyDown"
+    tabindex="0"
+  >
+    <div
+      class="row"
+      data-test="editor-row"
+      v-for="(row, index) in documentData"
+      :class="[`${(documentData.length - 1) === index ? 'current' : ''}`]"
+      v-bind:key=index
+    >
+      <div class="row-number" data-test="row-number">{{ index }}</div>
+      <div data-test="row-data" @click="handleClick($event, index)">{{ row }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
-const getKeyValueToRender = (keyCode, keyValue) => {
-  switch (keyCode) {
-    case 13:
-      // Enter
-      return '\n';
-    case 9:
-      // Tab
-      return '\xa0\xa0';
-    default:
-      return keyValue;
-  }
-};
-
-const getDefaultValue = () => {
-  if (window && window.localStorage) {
-    return window.localStorage.getItem('documentData') || '';
-  }
-  return '';
-};
-
-const setValueToStorage = (value) => {
-  if (window && window.localStorage) {
-    window.localStorage.setItem('documentData', value);
-  }
-};
+import {
+  getDefaultValue,
+  listOfSpecialKeys,
+  setValueToStorage,
+  updateCaret,
+  updateDocumentData,
+} from './utilities';
 
 export default {
   name: 'Editor',
-  data: () => ({
-    documentData: '',
-    caret: {
-      // use offset to determine caret position
-      offset: 0,
-    },
-  }),
+  data: () => {
+    const documentData = getDefaultValue();
+    return {
+      documentData,
+      caret: {
+        // use offset to determine caret position
+        offset: documentData[documentData.length - 1].length,
+        rowIndex: documentData.length - 1,
+      },
+    };
+  },
   // define methods under the `methods` object
   methods: {
     handleKeyDown(event) {
-      // cancel if the control, shift, alt, or meta key is held
-      if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey) {
+      if (listOfSpecialKeys[event.keyCode]) {
         return;
       }
-
-      // handle key actions
-      switch (event.keyCode) {
-        // Backspace
-        case 8:
-          this.documentData =
-            this.documentData.slice(
-              0,
-              Math.max(0, this.caret.offset - 1),
-            ) + this.documentData.slice(this.caret.offset);
-          // move caret to the index before the deleted character
-          this.caret.offset = Math.max(0, this.caret.offset - 1);
-          break;
-        // Left
-        case 37:
-          break;
-        // Up
-        case 38:
-          break;
-        // Right
-        case 39:
-          break;
-        // Down
-        case 40:
-          break;
-        // Text input
-        default:
-          this.documentData =
-            this.documentData.slice(0, this.caret.offset) +
-            getKeyValueToRender(event.keyCode, event.key) +
-            this.documentData.slice(this.caret.offset);
-          // move caret to the index after the appended character.
-          this.caret.offset += 1;
-          break;
+      // cancel if the control, alt, or meta key is held
+      // (we don't want to swallow up the browser shortcuts)
+      if (event.ctrlKey || event.altKey || event.metaKey) {
+        return;
       }
-    },
-    handleMouseUp() {
-      const sel = window.getSelection();
-      // check whether selected element is the editor
-      if (document.activeElement === document.getElementById('editor')) {
-        this.caret.offset = sel.anchorOffset;
-      }
+      const documentData = this.documentData;
+      this.documentData = updateDocumentData(documentData, this.caret, event);
+      this.caret = updateCaret(documentData, this.caret, event);
       setValueToStorage(this.documentData);
+    },
+    handleClick(event, index) {
+      this.caret.offset = window.getSelection().anchorOffset;
+      this.caret.rowIndex = index;
     },
   },
 };
@@ -107,11 +73,23 @@ export default {
   white-space: pre;
   font-size: 16px;
   text-align: left;
+  padding-left: 60px;
   padding-top: 15px;
-  padding-left: 120px;
   overflow: scroll;
   :focus {
     outline: 0;
+  }
+  .row {
+    height: 22px;
+    display: flex;
+    .row-number {
+      flex-basis: 60px;
+      text-align: center;
+      color: #484848;
+    }
+  }
+  .row.current {
+    background-color: $editor-currentLineBackground;
   }
 }
 </style>
