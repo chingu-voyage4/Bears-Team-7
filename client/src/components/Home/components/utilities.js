@@ -16,9 +16,13 @@ export const updateDocumentData = (
   const newDocument = [...document];
   switch (keyCode) {
     // Enter
-    case 13:
-      newDocument.splice(document.length, 0, '');
+    case 13: {
+      const beforeBreak = newDocument[rowIndex].slice(0, offset);
+      const afterBreak = newDocument[rowIndex].slice(offset);
+      newDocument[rowIndex] = beforeBreak;
+      newDocument.splice(rowIndex + 1, 0, afterBreak);
       return newDocument;
+    }
     // backspace
     case 8:
       if (newDocument.length === 1 && newDocument[0] === '') {
