@@ -123,4 +123,30 @@ describe('Editor.vue', () => {
     const secondWrapper = mount(Component);
     expect(textAtLineNumber(secondWrapper, 1)).toBe('a');
   });
+
+  test('An empty editor has a row with row number of 1', () => {
+    const wrapper = mount(Component);
+    const expectedFirstRowNumber = '1';
+    const rowNumbers = wrapper.findAll(
+      'div[data-test="editor"] div[data-test="row-number"]',
+    );
+    expect(rowNumbers.length).toBe(1);
+    expect(rowNumbers.at(0).text()).toBe(expectedFirstRowNumber);
+  });
+
+  test('First 3 rows to be row numbers 1, 2 and 3 respectively', () => {
+    const wrapper = mount(Component);
+    const expectedFirstRowNumber = '1';
+    const expectedSecondRowNumber = '2';
+    const expectedThirdRowNumber = '3';
+    wrapper.trigger('keydown.enter');
+    wrapper.trigger('keydown.enter');
+    const rowNumbers = wrapper.findAll(
+      'div[data-test="editor"] div[data-test="row-number"]',
+    );
+    expect(rowNumbers.length).toBe(3);
+    expect(rowNumbers.at(0).text()).toBe(expectedFirstRowNumber);
+    expect(rowNumbers.at(1).text()).toBe(expectedSecondRowNumber);
+    expect(rowNumbers.at(2).text()).toBe(expectedThirdRowNumber);
+  });
 });
