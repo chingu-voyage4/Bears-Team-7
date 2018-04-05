@@ -9,7 +9,7 @@
       class="row"
       data-test="editor-row"
       v-for="(row, index) in documentData"
-      :class="[`${(documentData.length - 1) === index ? 'current' : ''}`]"
+      :class="[`${caret.rowIndex === index ? 'current' : ''}`]"
       v-bind:key=index
     >
       <div class="row-number" data-test="row-number">{{ index + 1 }}</div>
