@@ -23,7 +23,8 @@ import {
   getDefaultValue,
   listOfSpecialKeys,
   setValueToStorage,
-  updateCaret,
+  updateCaretAtInput,
+  updateCaretAtSpecialKey,
   updateDocumentData,
 } from './utilities';
 
@@ -43,7 +44,9 @@ export default {
   // define methods under the `methods` object
   methods: {
     handleKeyDown(event) {
+      const documentData = this.documentData;
       if (listOfSpecialKeys[event.keyCode]) {
+        this.caret = updateCaretAtSpecialKey(documentData, this.caret, event);
         return;
       }
       // cancel if the control, alt, or meta key is held
@@ -51,9 +54,8 @@ export default {
       if (event.ctrlKey || event.altKey || event.metaKey) {
         return;
       }
-      const documentData = this.documentData;
       this.documentData = updateDocumentData(documentData, this.caret, event);
-      this.caret = updateCaret(documentData, this.caret, event);
+      this.caret = updateCaretAtInput(documentData, this.caret, event);
       setValueToStorage(this.documentData);
     },
     handleClick(event, index) {

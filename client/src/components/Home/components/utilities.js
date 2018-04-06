@@ -56,12 +56,16 @@ export const updateDocumentData = (
   }
 };
 
-export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
+export const updateCaretAtInput = (
+  document,
+  { offset, rowIndex },
+  { keyCode },
+) => {
   switch (keyCode) {
     // Enter
     case 13:
       return { offset: 0, rowIndex: rowIndex + 1 };
-    // backspace
+    // Backspace
     case 8:
       if (offset === 0 && rowIndex === 0) {
         // If we are at the very start of the document
@@ -82,6 +86,70 @@ export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
       return { offset: offset + 2, rowIndex };
     default:
       return { offset: offset + 1, rowIndex };
+  }
+};
+
+export const updateCaretAtSpecialKey = (
+  document,
+  { offset, rowIndex },
+  { keyCode },
+) => {
+  switch (keyCode) {
+    // Left arrow key
+    case 37:
+      // If the caret is at the beginning of the document, keep it as it is
+      if (offset === 0 && rowIndex === 0) {
+        return { offset: 0, rowIndex: 0 };
+      } else if (offset === 0) {
+        // If the caret is at the beginning of the current line, move the caret to
+        // the end of the previous line
+        return {
+          offset: document[rowIndex - 1].length,
+          rowIndex: rowIndex - 1,
+        };
+      }
+      return { offset: offset - 1, rowIndex };
+    // Up arrow key
+    case 38:
+      // If the caret is at the top of the document, keep it as it is
+      if (rowIndex === 0) {
+        return { offset: 0, rowIndex: 0 };
+      }
+      // Otherwise, move caret to the previous line, either at the same offset
+      // as previously, or to the end of the line if it doesn't reach the offset
+      return {
+        offset: Math.min(offset, document[rowIndex - 1].length),
+        rowIndex: rowIndex - 1,
+      };
+    // Right arrow key
+    case 39:
+      // If the caret is at the end of the document, keep it as it is
+      if (
+        offset === document[rowIndex].length &&
+        rowIndex === document.length - 1
+      ) {
+        return { offset, rowIndex };
+      }
+      // If the caret is at the end of a line, move caret to the next line
+      if (offset === document[rowIndex].length) {
+        return { offset: 0, rowIndex: rowIndex + 1 };
+      }
+      return { offset: offset + 1, rowIndex };
+    // Down arrow key
+    case 40:
+      // If the caret is at the bottom of the document, keep it as it is.
+      if (rowIndex === document.length - 1) {
+        return { offset, rowIndex };
+      }
+      // Otherwise, move caret to the next line at the same offset. If the next
+      // line is shorter than the offset, move the caret to the end of the next
+      // line.
+      return {
+        offset: Math.min(offset, document[rowIndex - 1].length),
+        rowIndex: rowIndex + 1,
+      };
+    default:
+      return { offset, rowIndex };
   }
 };
 
