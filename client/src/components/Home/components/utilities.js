@@ -30,11 +30,8 @@ export const updateDocumentData = (
         // i.e. the document is empty. Don't remove anything else
         return newDocument;
       }
-      if (offset === 0) {
-        // If we are at the start of a line, concatenate it with the
-        // previous line
-        newDocument[rowIndex - 1] =
-          newDocument[rowIndex - 1] + newDocument[rowIndex];
+      if (newDocument[rowIndex] === '') {
+        // If we are at the start of a new line, remove the line
         newDocument.splice(rowIndex, 1);
         return newDocument;
       }
@@ -71,9 +68,8 @@ export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
         // i.e. the document is empty. Don't remove anything else
         return { offset: 0, rowIndex: 0 };
       }
-      if (offset === 0) {
-        // If we are at the start of a line, move the caret to the end
-        // of the previous line
+      if (document[rowIndex] === '') {
+        // If we are at the start of a new line, remove the line
         return {
           offset: document[rowIndex - 1].length,
           rowIndex: rowIndex - 1,
