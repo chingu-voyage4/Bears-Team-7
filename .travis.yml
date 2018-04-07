@@ -15,5 +15,5 @@ script:
 deploy:
   skip_cleanup: true
   provider: surge
-  project: ./dist/
+  project: ./client/dist/
   domain: https://vscode-clone.surge.sh
