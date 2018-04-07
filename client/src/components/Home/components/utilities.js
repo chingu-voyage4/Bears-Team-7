@@ -35,7 +35,6 @@ export const updateDocumentData = (
         // previous line
         newDocument[rowIndex - 1] =
           newDocument[rowIndex - 1] + newDocument[rowIndex];
-        newDocument.splice(rowIndex, 1);
         return newDocument;
       }
       // Otherwise remove the next character on the line
