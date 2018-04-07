@@ -25,12 +25,12 @@ export const updateDocumentData = (
     }
     // backspace
     case 8:
-      if (newDocument.length === 1 && newDocument[0] === '') {
+      if (offset === 0 && rowIndex === 0) {
         // If we are at the very start of the document
         // i.e. the document is empty. Don't remove anything else
         return newDocument;
       }
-      if (offset === 0) {
+      if (offset === 0 && rowIndex > 0) {
         // If we are at the start of a line, concatenate it with the
         // previous line
         newDocument[rowIndex - 1] =
@@ -71,7 +71,7 @@ export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
         // i.e. the document is empty. Don't remove anything else
         return { offset: 0, rowIndex: 0 };
       }
-      if (offset === 0) {
+      if (offset === 0 && rowIndex > 0) {
         // If we are at the start of a line, move the caret to the end
         // of the previous line
         return {
