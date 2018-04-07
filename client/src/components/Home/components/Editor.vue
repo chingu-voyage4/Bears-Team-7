@@ -21,10 +21,10 @@
 <script>
 import {
   getDefaultValue,
+  caretMovementKeys,
   listOfSpecialKeys,
   setValueToStorage,
-  updateCaretAtInput,
-  updateCaretAtSpecialKey,
+  updateCaret,
   updateDocumentData,
 } from './utilities';
 
@@ -46,7 +46,6 @@ export default {
     handleKeyDown(event) {
       const documentData = this.documentData;
       if (listOfSpecialKeys[event.keyCode]) {
-        this.caret = updateCaretAtSpecialKey(documentData, this.caret, event);
         return;
       }
       // cancel if the control, alt, or meta key is held
@@ -54,9 +53,13 @@ export default {
       if (event.ctrlKey || event.altKey || event.metaKey) {
         return;
       }
-      this.documentData = updateDocumentData(documentData, this.caret, event);
-      this.caret = updateCaretAtInput(documentData, this.caret, event);
-      setValueToStorage(this.documentData);
+      // Do not update the document if the key pressed is simply meant
+      // to move the caret.
+      if (!caretMovementKeys[event.keyCode]) {
+        this.documentData = updateDocumentData(documentData, this.caret, event);
+        setValueToStorage(this.documentData);
+      }
+      this.caret = updateCaret(documentData, this.caret, event);
     },
     handleClick(event, index) {
       this.caret.offset = window.getSelection().anchorOffset;

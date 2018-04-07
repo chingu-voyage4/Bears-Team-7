@@ -56,11 +56,7 @@ export const updateDocumentData = (
   }
 };
 
-export const updateCaretAtInput = (
-  document,
-  { offset, rowIndex },
-  { keyCode },
-) => {
+export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
   switch (keyCode) {
     // Enter
     case 13:
@@ -84,18 +80,8 @@ export const updateCaretAtInput = (
     // Tab
     case 9:
       return { offset: offset + 2, rowIndex };
-    default:
-      return { offset: offset + 1, rowIndex };
-  }
-};
-
-export const updateCaretAtSpecialKey = (
-  document,
-  { offset, rowIndex },
-  { keyCode },
-) => {
-  switch (keyCode) {
-    // Left arrow key
+    // Arrow keys:
+    // Left
     case 37:
       // If the caret is at the beginning of the document, keep it as it is
       if (offset === 0 && rowIndex === 0) {
@@ -109,7 +95,7 @@ export const updateCaretAtSpecialKey = (
         };
       }
       return { offset: offset - 1, rowIndex };
-    // Up arrow key
+    // Up
     case 38:
       // If the caret is at the top of the document, keep it as it is
       if (rowIndex === 0) {
@@ -121,7 +107,7 @@ export const updateCaretAtSpecialKey = (
         offset: Math.min(offset, document[rowIndex - 1].length),
         rowIndex: rowIndex - 1,
       };
-    // Right arrow key
+    // Right
     case 39:
       // If the caret is at the end of the document, keep it as it is
       if (
@@ -135,7 +121,7 @@ export const updateCaretAtSpecialKey = (
         return { offset: 0, rowIndex: rowIndex + 1 };
       }
       return { offset: offset + 1, rowIndex };
-    // Down arrow key
+    // Down
     case 40:
       // If the caret is at the bottom of the document, keep it as it is.
       if (rowIndex === document.length - 1) {
@@ -145,11 +131,11 @@ export const updateCaretAtSpecialKey = (
       // line is shorter than the offset, move the caret to the end of the next
       // line.
       return {
-        offset: Math.min(offset, document[rowIndex - 1].length),
+        offset: Math.min(offset, document[rowIndex + 1].length),
         rowIndex: rowIndex + 1,
       };
     default:
-      return { offset, rowIndex };
+      return { offset: offset + 1, rowIndex };
   }
 };
 
@@ -171,6 +157,13 @@ export const setValueToStorage = (value) => {
   }
 };
 
+export const caretMovementKeys = {
+  37: 'left arrow',
+  38: 'up arrow',
+  39: 'right arrow',
+  40: 'down arrow',
+};
+
 export const listOfSpecialKeys = {
   91: 'command',
   18: 'option',
@@ -187,10 +180,6 @@ export const listOfSpecialKeys = {
   119: 'f8',
   120: 'f9',
   121: 'f10',
-  37: 'left arrow',
-  38: 'up arrow',
-  39: 'right arrow',
-  40: 'down arrow',
 };
 
 // export const isInListOfUnusedKeys = (values) => {
