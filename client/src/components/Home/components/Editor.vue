@@ -21,6 +21,7 @@
 <script>
 import {
   getDefaultValue,
+  caretMovementKeys,
   listOfSpecialKeys,
   setValueToStorage,
   updateCaret,
@@ -43,6 +44,7 @@ export default {
   // define methods under the `methods` object
   methods: {
     handleKeyDown(event) {
+      const documentData = this.documentData;
       if (listOfSpecialKeys[event.keyCode]) {
         return;
       }
@@ -51,10 +53,13 @@ export default {
       if (event.ctrlKey || event.altKey || event.metaKey) {
         return;
       }
-      const documentData = this.documentData;
-      this.documentData = updateDocumentData(documentData, this.caret, event);
+      // Do not update the document if the key pressed is simply meant
+      // to move the caret.
+      if (!caretMovementKeys[event.keyCode]) {
+        this.documentData = updateDocumentData(documentData, this.caret, event);
+        setValueToStorage(this.documentData);
+      }
       this.caret = updateCaret(documentData, this.caret, event);
-      setValueToStorage(this.documentData);
     },
     handleClick(event, index) {
       this.caret.offset = window.getSelection().anchorOffset;
