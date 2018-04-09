@@ -10,6 +10,7 @@
       data-test="editor-row"
       v-for="(row, index) in documentData"
       :class="[`${caret.rowIndex === index ? 'current' : ''}`]"
+      @click="handleClick($event, index)"
       v-bind:key=index
     >
       <div
