@@ -19,16 +19,17 @@
         >{{ index + 1 }}
       </div>
       <div
-        data-test="row-data-caret"
+        class="row-data-caret"
+        data-test="row-data"
         @click="handleClick($event, index)"
         v-if="caret.rowIndex === index"
         ><span
           class="row-before-caret"
-          data-test="row-before-caret"
+          data-test="row-caret"
           >{{ row.slice(0, caret.offset) }}</span>
         <span
           class="row-after-caret"
-          data-test="row-after-caret"
+          data-test="row-caret"
           >{{ row.slice(caret.offset) }}</span>
       </div>
       <div
