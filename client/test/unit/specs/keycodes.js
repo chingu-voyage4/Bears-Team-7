@@ -32,4 +32,20 @@ export const keyCodes = {
     keyCode: 9,
     key: 'tab',
   },
+  left: {
+    keyCode: 37,
+    key: 'left',
+  },
+  up: {
+    keyCode: 38,
+    key: 'up',
+  },
+  right: {
+    keyCode: 39,
+    key: 'right',
+  },
+  down: {
+    keyCode: 40,
+    key: 'down',
+  },
 };
