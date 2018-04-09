@@ -149,4 +149,49 @@ describe('Editor.vue', () => {
     expect(rowNumbers.at(1).text()).toBe(expectedSecondRowNumber);
     expect(rowNumbers.at(2).text()).toBe(expectedThirdRowNumber);
   });
+
+  test('Caret moves after every inputted character', () => {
+    const wrapper = mount(Component);
+    wrapper.trigger('keydown', keyCodes.a);
+    wrapper.trigger('keydown', keyCodes.b);
+    wrapper.trigger('keydown', keyCodes.c);
+
+    const rowBeforeCaret = wrapper.find(
+      '[data-test="editor"] span.row-before-caret',
+    );
+    expect(rowBeforeCaret.text()).toBe('abc');
+  });
+
+  test('Left arrow key moves caret before the entered character', () => {
+    const wrapper = mount(Component);
+    wrapper.trigger('keydown', keyCodes.a);
+    wrapper.trigger('keydown', keyCodes.left);
+
+    const rowBeforeCaret = wrapper.find(
+      'div[data-test="editor"] span.row-before-caret',
+    );
+    expect(rowBeforeCaret.text()).toBe('');
+  });
+
+  test('Pressing up, left, down, and right arrows keys in succession return caret to its original position', () => {
+    const wrapper = mount(Component);
+    wrapper.trigger('keydown', keyCodes.a);
+    wrapper.trigger('keydown.enter');
+    wrapper.trigger('keydown', keyCodes.b);
+
+    const rows = wrapper.findAll(
+      'div[data-test="editor"] div[data-test="row-data"]',
+    );
+    const rowBeforeCaret = wrapper.find(
+      'div[data-test="editor"] span.row-before-caret',
+    );
+    expect(rows.at(0).text()).toBe('a');
+    expect(rowBeforeCaret.text()).toBe('b');
+
+    wrapper.trigger('keydown', keyCodes.up);
+    wrapper.trigger('keydown', keyCodes.left);
+    wrapper.trigger('keydown', keyCodes.down);
+    wrapper.trigger('keydown', keyCodes.right);
+    expect(rowBeforeCaret.text()).toBe('b');
+  });
 });
