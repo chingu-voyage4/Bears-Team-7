@@ -19,4 +19,5 @@ module.exports = {
     img: 'src',
     image: 'xlink:href',
   },
+  preserveWhitespace: false,
 };
