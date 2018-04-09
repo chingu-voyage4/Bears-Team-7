@@ -12,8 +12,30 @@
       :class="[`${caret.rowIndex === index ? 'current' : ''}`]"
       v-bind:key=index
     >
-      <div class="row-number" data-test="row-number">{{ index + 1 }}</div>
-      <div data-test="row-data" @click="handleClick($event, index)">{{ row }}</div>
+      <div
+        class="row-number"
+        data-test="row-number"
+        >{{ index + 1 }}
+      </div>
+      <div
+        data-test="row-data-caret"
+        @click="handleClick($event, index)"
+        v-if="caret.rowIndex === index"
+        ><span
+          class="row-before-caret"
+          data-test="row-before-caret"
+          >{{ row.slice(0, caret.offset) }}</span>
+        <span
+          class="row-after-caret"
+          data-test="row-after-caret"
+          >{{ row.slice(caret.offset) }}</span>
+      </div>
+      <div
+        data-test="row-data"
+        @click="handleClick($event, index)"
+        v-else
+        >{{ row }}
+      </div>
     </div>
   </div>
 </template>
@@ -62,7 +84,15 @@ export default {
       this.caret = updateCaret(documentData, this.caret, event);
     },
     handleClick(event, index) {
-      this.caret.offset = window.getSelection().anchorOffset;
+      const sel = window.getSelection();
+      let offset = sel.anchorOffset;
+      // if the offset taken from window.getSelection is related to
+      // the row-after-caret element, add the caret offset, which is
+      // the length of the row-before-caret element
+      if (sel.anchorNode.parentElement.className === 'row-after-caret') {
+        offset += this.caret.offset;
+      }
+      this.caret.offset = offset;
       this.caret.rowIndex = index;
     },
   },
@@ -70,7 +100,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 .editor {
   background-color: $editor-background;
   color: $editor-fontColor;
@@ -95,6 +125,24 @@ export default {
   }
   .row.current {
     background-color: $editor-currentLineBackground;
+  }
+  .row-before-caret::after {
+    content: '';
+    background: $editor-fontColor;
+    width: 1px;
+    position: absolute;
+    animation: blink 2s step-end infinite;
+  }
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
   }
 }
 </style>
