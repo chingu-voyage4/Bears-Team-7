@@ -1,7 +1,7 @@
 <template>
   <div
-    class="line"
-    data-test="line"
+    class="row"
+    data-test="row"
     v-html="html"
   />
 </template>
@@ -16,7 +16,7 @@ const parseTextToHTML = (text) => {
   return html;
 };
 export default {
-  name: 'Line',
+  name: 'Row',
   props: {
     text: {
       type: String,
