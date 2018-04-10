@@ -25,13 +25,16 @@ export const updateDocumentData = (
     }
     // backspace
     case 8:
-      if (newDocument.length === 1 && newDocument[0] === '') {
+      if (offset === 0 && rowIndex === 0) {
         // If we are at the very start of the document
         // i.e. the document is empty. Don't remove anything else
         return newDocument;
       }
-      if (newDocument[rowIndex] === '') {
-        // If we are at the start of a new line, remove the line
+      if (offset === 0 && rowIndex > 0) {
+        // If we are at the start of a line, concatenate it with the
+        // previous line
+        newDocument[rowIndex - 1] =
+          newDocument[rowIndex - 1] + newDocument[rowIndex];
         newDocument.splice(rowIndex, 1);
         return newDocument;
       }
@@ -61,15 +64,16 @@ export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
     // Enter
     case 13:
       return { offset: 0, rowIndex: rowIndex + 1 };
-    // backspace
+    // Backspace
     case 8:
       if (offset === 0 && rowIndex === 0) {
         // If we are at the very start of the document
         // i.e. the document is empty. Don't remove anything else
         return { offset: 0, rowIndex: 0 };
       }
-      if (document[rowIndex] === '') {
-        // If we are at the start of a new line, remove the line
+      if (offset === 0 && rowIndex > 0) {
+        // If we are at the start of a line, move the caret to the end
+        // of the previous line
         return {
           offset: document[rowIndex - 1].length,
           rowIndex: rowIndex - 1,
@@ -80,6 +84,60 @@ export const updateCaret = (document, { offset, rowIndex }, { keyCode }) => {
     // Tab
     case 9:
       return { offset: offset + 2, rowIndex };
+    // Arrow keys:
+    // Left
+    case 37:
+      // If the caret is at the beginning of the document, keep it as it is
+      if (offset === 0 && rowIndex === 0) {
+        return { offset: 0, rowIndex: 0 };
+      } else if (offset === 0) {
+        // If the caret is at the beginning of the current line, move the caret to
+        // the end of the previous line
+        return {
+          offset: document[rowIndex - 1].length,
+          rowIndex: rowIndex - 1,
+        };
+      }
+      return { offset: offset - 1, rowIndex };
+    // Up
+    case 38:
+      // If the caret is at the top of the document, keep it as it is
+      if (rowIndex === 0) {
+        return { offset: 0, rowIndex: 0 };
+      }
+      // Otherwise, move caret to the previous line, either at the same offset
+      // as previously, or to the end of the line if it doesn't reach the offset
+      return {
+        offset: Math.min(offset, document[rowIndex - 1].length),
+        rowIndex: rowIndex - 1,
+      };
+    // Right
+    case 39:
+      // If the caret is at the end of the document, keep it as it is
+      if (
+        offset === document[rowIndex].length &&
+        rowIndex === document.length - 1
+      ) {
+        return { offset, rowIndex };
+      }
+      // If the caret is at the end of a line, move caret to the next line
+      if (offset === document[rowIndex].length) {
+        return { offset: 0, rowIndex: rowIndex + 1 };
+      }
+      return { offset: offset + 1, rowIndex };
+    // Down
+    case 40:
+      // If the caret is at the bottom of the document, keep it as it is.
+      if (rowIndex === document.length - 1) {
+        return { offset, rowIndex };
+      }
+      // Otherwise, move caret to the next line at the same offset. If the next
+      // line is shorter than the offset, move the caret to the end of the next
+      // line.
+      return {
+        offset: Math.min(offset, document[rowIndex + 1].length),
+        rowIndex: rowIndex + 1,
+      };
     default:
       return { offset: offset + 1, rowIndex };
   }
@@ -103,6 +161,13 @@ export const setValueToStorage = (value) => {
   }
 };
 
+export const caretMovementKeys = {
+  37: 'left arrow',
+  38: 'up arrow',
+  39: 'right arrow',
+  40: 'down arrow',
+};
+
 export const listOfSpecialKeys = {
   91: 'command',
   18: 'option',
@@ -119,10 +184,6 @@ export const listOfSpecialKeys = {
   119: 'f8',
   120: 'f9',
   121: 'f10',
-  37: 'left arrow',
-  38: 'up arrow',
-  39: 'right arrow',
-  40: 'down arrow',
 };
 
 // export const isInListOfUnusedKeys = (values) => {
