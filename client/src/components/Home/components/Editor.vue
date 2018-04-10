@@ -13,36 +13,16 @@
       @click="handleClick($event, index)"
       v-bind:key=index
     >
-      <div
-        class="row-number"
-        data-test="row-number"
-        >{{ index + 1 }}
-      </div>
-      <div
-        class="row-data-caret"
-        data-test="row-data"
-        @click="handleClick($event, index)"
-        v-if="caret.rowIndex === index"
-        ><span
-          class="row-before-caret"
-          data-test="row-caret"
-          >{{ row.slice(0, caret.offset) }}</span>
-        <span
-          class="row-after-caret"
-          data-test="row-caret"
-          >{{ row.slice(caret.offset) }}</span>
-      </div>
-      <div
-        data-test="row-data"
-        @click="handleClick($event, index)"
-        v-else
-        >{{ row }}
+      <div class="row-number" data-test="row-number">{{ index + 1 }}</div>
+      <div data-test="row-data" @click="handleClick($event, index)">
+        <row v-bind:text=row />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Row from './Row';
 import {
   getDefaultValue,
   caretMovementKeys,
@@ -54,6 +34,9 @@ import {
 
 export default {
   name: 'Editor',
+  components: {
+    row: Row,
+  },
   data: () => {
     const documentData = getDefaultValue();
     return {
