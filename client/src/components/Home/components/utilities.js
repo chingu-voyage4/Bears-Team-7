@@ -1,3 +1,11 @@
+const closingCharacters = {
+  '{': '}',
+  '[': ']',
+  '(': ')',
+  '"': '"',
+  "'": "'",
+};
+
 const addValueAtIndex = (rowText, value, index) => {
   const val = `${rowText.slice(0, index)}${value}${rowText.slice(index)}`;
   return val;
@@ -7,6 +15,9 @@ const removeValueAtIndex = (rowText, index) => {
   const val = rowText.slice(0, Math.max(0, index - 1)) + rowText.slice(index);
   return val;
 };
+
+const closeOpeningBracket = (document, { offset, rowIndex }, char) =>
+  addValueAtIndex(document[rowIndex], closingCharacters[char], offset + 1);
 
 export const updateDocumentData = (
   document,
@@ -55,6 +66,13 @@ export const updateDocumentData = (
         key,
         offset,
       );
+      if (closingCharacters[key]) {
+        newDocument[rowIndex] = closeOpeningBracket(
+          newDocument,
+          { offset, rowIndex },
+          key,
+        );
+      }
       return newDocument;
   }
 };
