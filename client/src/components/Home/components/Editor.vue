@@ -15,7 +15,9 @@
     >
       <div class="row-number" data-test="row-number">{{ index + 1 }}</div>
       <div data-test="row-data" @click="handleClick($event, index)">
-        <row v-bind:text=row />
+        <row
+          v-bind:text=row
+          v-bind:caretOffset="[caret.rowIndex === index ? caret.offset : null ]"/>
       </div>
     </div>
   </div>
@@ -31,6 +33,48 @@ import {
   updateCaret,
   updateDocumentData,
 } from './utilities';
+
+const findNodeInParent = (node, parent) => {
+  // recursively look for node in element
+
+  // return false if the parent does not contain node
+  if (!parent.contains(node)) {
+    return -1;
+  }
+  // return false once we've traversed all parents to the parent
+  // or document
+  if (node === parent || node === document) {
+    return -1;
+  }
+
+  const nodeIndex = Array.prototype.indexOf.call(parent.childNodes, node);
+  // recurse through node parent if node is not found in 'parent'
+  if (nodeIndex === -1) {
+    return findNodeInParent(node.parentNode, parent);
+  }
+  return nodeIndex;
+};
+
+const getOffsetRelativeToElement = (sel, el) => {
+  const elChildren = el.childNodes;
+  const anchorNodeInEl = findNodeInParent(sel.anchorNode, el);
+  let offset = sel.anchorOffset;
+  // return original offset if the anchorNode is first or not within 'el'
+  if (anchorNodeInEl < 1) {
+    return offset;
+  }
+
+  // loop through child nodes of 'el' before the selected node
+  for (let i = 0; i < anchorNodeInEl; i += 1) {
+    // add the text length of the child node to the offset
+    const text = elChildren.item(i).textContent;
+    if (typeof text !== 'undefined') {
+      offset += text.length;
+    }
+  }
+
+  return offset;
+};
 
 export default {
   name: 'Editor',
@@ -70,13 +114,10 @@ export default {
     },
     handleClick(event, index) {
       const sel = window.getSelection();
-      let offset = sel.anchorOffset;
-      // if the offset taken from window.getSelection is related to
-      // the row-after-caret element, add the caret offset, which is
-      // the length of the row-before-caret element
-      if (sel.anchorNode.parentElement.className === 'row-after-caret') {
-        offset += this.caret.offset;
-      }
+      const offset = getOffsetRelativeToElement(
+        sel,
+        document.querySelectorAll('.row-text > span')[index],
+      );
       this.caret.offset = offset;
       this.caret.rowIndex = index;
     },
