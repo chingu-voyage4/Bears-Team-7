@@ -1,6 +1,6 @@
 <template>
   <div
-    class="row"
+    class="row-text"
     data-test="row"
     v-html="html"
   />
