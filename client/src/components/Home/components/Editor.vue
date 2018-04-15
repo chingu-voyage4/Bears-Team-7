@@ -17,7 +17,7 @@
       <div data-test="row-data" @click="handleClick($event, index)">
         <row
           v-bind:text=row
-          v-bind:caretOffset="[caret.rowIndex === index ? caret.offset : null ]"/>
+          v-bind:caretOffset="caret.rowIndex === index ? caret.offset : -1"/>
       </div>
     </div>
   </div>
@@ -34,21 +34,21 @@ import {
   updateDocumentData,
 } from './utilities';
 
+// recursively look for node in element
 const findNodeInParent = (node, parent) => {
-  // recursively look for node in element
-
   // return false if the parent does not contain node
   if (!parent.contains(node)) {
     return -1;
   }
-  // return false once we've traversed all parents to the parent
-  // or document
+  // return false once we've recursed all the way to 'parent', or to
+  // the document element
   if (node === parent || node === document) {
     return -1;
   }
 
   const nodeIndex = Array.prototype.indexOf.call(parent.childNodes, node);
-  // recurse through node parent if node is not found in 'parent'
+  // recursively call function on the node's parent if node is not
+  // found in 'parent'
   if (nodeIndex === -1) {
     return findNodeInParent(node.parentNode, parent);
   }
@@ -56,18 +56,24 @@ const findNodeInParent = (node, parent) => {
 };
 
 const getOffsetRelativeToElement = (sel, el) => {
-  const elChildren = el.childNodes;
+  // return 0 as the offset if the row is empty
+  if (!el) {
+    return 0;
+  }
+
   const anchorNodeInEl = findNodeInParent(sel.anchorNode, el);
   let offset = sel.anchorOffset;
-  // return original offset if the anchorNode is first or not within 'el'
+  // return the original offset if the anchorNode is the first child
+  // in 'el', or is not at all within 'el'.
   if (anchorNodeInEl < 1) {
     return offset;
   }
 
-  // loop through child nodes of 'el' before the selected node
+  // loop through child nodes of 'el' until we reach the anchor node
+  // (or the element which contains it)
   for (let i = 0; i < anchorNodeInEl; i += 1) {
-    // add the text length of the child node to the offset
-    const text = elChildren.item(i).textContent;
+    // add the text length of each child node to the offset
+    const text = el.childNodes.item(i).textContent;
     if (typeof text !== 'undefined') {
       offset += text.length;
     }
@@ -114,6 +120,9 @@ export default {
     },
     handleClick(event, index) {
       const sel = window.getSelection();
+      // window.getSelection() only gets the offset relative to the
+      // direct element or text node holding the text. We have to get
+      // the offset relative to the entire row.
       const offset = getOffsetRelativeToElement(
         sel,
         document.querySelectorAll('.row-text > span')[index],
