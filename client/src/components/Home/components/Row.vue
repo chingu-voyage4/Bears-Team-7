@@ -9,9 +9,9 @@
 <script>
 const parseTextToHTML = (text) => {
   let html = text;
-  html = html.replace(/const/g, '<span style="color: red">const</span>');
-  html = html.replace(/var/g, '<span style="color: red">var</span>');
-  html = html.replace(/let/g, '<span style="color: red">let</span>');
+  html = html.replace(/const/g, '<span class="red: red">const</span>');
+  html = html.replace(/var/g, '<span class="red: red">var</span>');
+  html = html.replace(/let/g, '<span class="red: red">let</span>');
   html = `<span>${html}</span>`;
   return html;
 };
@@ -35,3 +35,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.row >>> .red {
+  color: red;
+}
+</style>

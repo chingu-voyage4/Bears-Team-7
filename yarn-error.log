@@ -1,0 +1,32 @@
+Arguments: 
+  /Users/matthewburfield/.nvm/v9.3.0/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js start
+
+PATH: 
+  /Users/matthewburfield/.node/bin:/Users/matthewburfield/.nvm/v9.3.0/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Users/matthewburfield/.node/bin:/usr/local/Cellar/ruby/2.0.0-p247/bin:/Users/matthewburfield/Library/Python/2.7/bin
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  9.3.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Couldn't find a package.json file in "/Users/matthewburfield/Development/Chingu/Bears-Team-7"
+      at new MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:40048:15
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:98:30)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:109:13
+      at <anonymous>
