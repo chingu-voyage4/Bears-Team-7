@@ -1,22 +1,54 @@
+const regex = {
+  startOfLine: (str, flags = 'gm') => new RegExp(`^\\s*(${str})`, flags),
+};
+
 const transforms = [
   {
-    regex: /const/g,
-    replaceWith: '<span class="red">const</span>',
-  },
-  {
-    regex: /var/g,
+    string: 'const',
+    regex: regex.startOfLine,
     class: 'red',
   },
   {
-    regex: /let/g,
+    string: 'let',
+    regex: regex.startOfLine,
     class: 'red',
+  },
+  {
+    string: 'var',
+    regex: regex.startOfLine,
+    class: 'red',
+  },
+  {
+    string: 'function',
+    regex: regex.startOfLine,
+    class: 'blue',
+  },
+  {
+    string: 'import',
+    regex: regex.startOfLine,
+    class: 'blue',
+  },
+  {
+    string: 'export',
+    regex: regex.startOfLine,
+    class: 'blue',
+  },
+  {
+    string: 'return',
+    regex: regex.startOfLine,
+    class: 'blue',
   },
 ];
 
 const transformText = (html) => {
-  const newHTML = html;
-  transforms.forEach((transform) => newHTML.replace(transform.regex, ''));
-  return html;
+  let newHTML = html;
+  transforms.forEach((transform) => {
+    newHTML = newHTML.replace(
+      transform.regex(transform.string),
+      `<span class="${transform.class}">${transform.string}</span>`,
+    );
+  });
+  return newHTML;
 };
 
 export default transformText;

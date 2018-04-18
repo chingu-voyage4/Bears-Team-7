@@ -7,14 +7,8 @@
 </template>
 
 <script>
-const parseTextToHTML = (text) => {
-  let html = text;
-  html = html.replace(/const/g, '<span class="red: red">const</span>');
-  html = html.replace(/var/g, '<span class="red: red">var</span>');
-  html = html.replace(/let/g, '<span class="red: red">let</span>');
-  html = `<span>${html}</span>`;
-  return html;
-};
+import transformText from './textHighlights';
+
 export default {
   name: 'Row',
   props: {
@@ -25,19 +19,24 @@ export default {
   },
   watch: {
     text: function text(newText) {
-      this.html = parseTextToHTML(newText);
+      this.html = transformText(newText);
     },
   },
   data: function data() {
     return {
-      html: parseTextToHTML(this.text),
+      html: transformText(this.text),
     };
   },
 };
 </script>
 
 <style scoped>
+/* prettier-ignore */
 .row >>> .red {
   color: red;
+}
+/* prettier-ignore */
+.row >>> .blue {
+  color: blue;
 }
 </style>
