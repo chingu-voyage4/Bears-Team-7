@@ -13,12 +13,15 @@
       v-bind:key=index
     >
       <div class="row-number" data-test="row-number">{{ index + 1 }}</div>
-      <div data-test="row-data" @click="handleClick($event, index)">{{ row }}</div>
+      <div data-test="row-data" @click="handleClick($event, index)">
+        <row v-bind:text=row />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Row from './Row';
 import {
   getDefaultValue,
   caretMovementKeys,
@@ -30,6 +33,9 @@ import {
 
 export default {
   name: 'Editor',
+  components: {
+    row: Row,
+  },
   data: () => {
     const documentData = getDefaultValue();
     return {
