@@ -8,6 +8,7 @@
 
 <script>
 import { escapeHtml } from './utilities';
+import transformText from './textHighlights';
 
 const insertCaretInHtml = (html, caretOffset) => {
   const caretSpan = '<span class="caret"></span>';
@@ -59,9 +60,7 @@ const parseTextToHTML = (text, caretOffset) => {
   Object.keys(escapeHtml).forEach((symbol) => {
     html = html.replace(new RegExp(symbol, 'g'), escapeHtml[symbol]);
   });
-  html = html.replace(/const/g, '<span style="color: red">const</span>');
-  html = html.replace(/var/g, '<span style="color: red">var</span>');
-  html = html.replace(/let/g, '<span style="color: red">let</span>');
+  html = transformText(html);
   // if the 'caretOffset' exists, insert a caret in the HTML
   if (caretOffset > -1) {
     html = insertCaretInHtml(html, caretOffset);
@@ -69,6 +68,7 @@ const parseTextToHTML = (text, caretOffset) => {
   html = `<span>${html}</span>`;
   return html;
 };
+
 export default {
   name: 'Row',
   props: {
@@ -102,6 +102,13 @@ export default {
   height: 100%;
   position: absolute;
   animation: blink 2s step-end infinite;
+}
+.row-text /deep/ .red {
+  color: red;
+}
+/* prettier-ignore */
+.row-text /deep/ .blue {
+  color: blue;
 }
 @keyframes blink {
   0% {
