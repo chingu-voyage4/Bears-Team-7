@@ -8,6 +8,17 @@ const removeValueAtIndex = (rowText, index) => {
   return val;
 };
 
+export const escapeHtml = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&quot;',
+  "'": '&#39;',
+  '/': '&#x2F;',
+  '`': '&#x60;',
+  '=': '&#x3D;',
+};
+
 export const updateDocumentData = (
   document,
   { offset, rowIndex },
