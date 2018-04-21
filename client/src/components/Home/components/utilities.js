@@ -19,6 +19,10 @@ export const escapeHtml = {
   '=': '&#x3D;',
 };
 
+export const loopThroughObject = (obj, func) => {
+  Object.keys(obj).forEach(func);
+};
+
 export const updateDocumentData = (
   document,
   { offset, rowIndex },
