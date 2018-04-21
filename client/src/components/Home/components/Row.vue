@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { escapeHtml } from './utilities';
+import { loopThroughObject, escapeHtml } from './utilities';
 import transformText from './textHighlights';
 
 const insertCaretInHtml = (html, caretOffset) => {
@@ -16,10 +16,12 @@ const insertCaretInHtml = (html, caretOffset) => {
   if (html === '') {
     return caretSpan;
   }
-  const htmlRegEx = /(<\/?\w+(?: \w+=".+?")?>)/g;
+  const htmlRegEx = '</?\\w+(?: \\w+=".+?")?>';
+  const escapeCodeRegEx = `${Object.values(escapeHtml).join('|')}`;
+  const RegEx = new RegExp(`(${htmlRegEx}|${escapeCodeRegEx})`);
   let newHtml = html;
   // split string into array at html tags
-  newHtml = newHtml.split(htmlRegEx);
+  newHtml = newHtml.split(RegEx);
 
   let offset = 0;
   // loop through the resulting array until we pass the index of the
@@ -30,22 +32,30 @@ const insertCaretInHtml = (html, caretOffset) => {
     curr < newHtml.length && offset <= caretOffset;
     curr += 1
   ) {
-    // check whether the current element is not an html tag
-    if (!htmlRegEx.test(newHtml[curr])) {
+    if (!new RegExp(htmlRegEx).test(newHtml[curr])) {
       const prevOffset = offset;
-      // add the length of the current element to 'offset'
-      offset += newHtml[curr].length;
+      let caret = caretOffset;
+      // check if current element is an escape code
+      if (new RegExp(escapeCodeRegEx).test(newHtml[curr])) {
+        offset += 1;
+        // add the length of escape code to the caret to offset it
+        caret += newHtml[curr].length;
+      } else {
+        // add the length of the current element to 'offset'
+        offset += newHtml[curr].length;
+      }
       // check if the caret offset is now within the current offset
       if (offset >= caretOffset) {
         // subtract the previous offset from the caret offset to
         // get the offset relative to the current split of the string
-        const elOffset = caretOffset - prevOffset;
+        const elOffset = caret - prevOffset;
         // insert the string at the resulting offset within the
         // current element
         newHtml[curr] = `${newHtml[curr].slice(
           0,
           elOffset,
         )}${caretSpan}${newHtml[curr].slice(elOffset)}`;
+        return newHtml.join('');
       }
     }
   }
@@ -57,7 +67,7 @@ const parseTextToHTML = (text, caretOffset) => {
   let html = text;
   // replace occurences of special symbols with the appropriate HTML
   // escape code
-  Object.keys(escapeHtml).forEach((symbol) => {
+  loopThroughObject(escapeHtml, (symbol) => {
     html = html.replace(new RegExp(symbol, 'g'), escapeHtml[symbol]);
   });
   html = transformText(html);
