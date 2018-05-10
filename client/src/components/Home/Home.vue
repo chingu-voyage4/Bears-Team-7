@@ -1,19 +1,21 @@
 <template>
   <div class="main">
     <sidebar />
-    <editor />
+    <welcome />
   </div>
 </template>
 
 <script>
 import Editor from './components/Editor';
 import Sidebar from './components/Sidebar';
+import WelcomeScreen from './components/WelcomeScreen';
 
 export default {
   name: 'Home',
   components: {
     editor: Editor,
     sidebar: Sidebar,
+    welcome: WelcomeScreen,
   },
 };
 </script>
